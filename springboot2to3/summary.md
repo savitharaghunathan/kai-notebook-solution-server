@@ -114,6 +114,19 @@ public class SecurityConfig {
 
 ## Experiments
 
+High level overview 
+
+# Spring Boot 2 → 3 Migration Experiment Summary
+
+| Model           | Hint Strategy        | Key Inputs                                                                                      | Refactored Output                                                                                               | Observation                                                                                                                                                                                               |
+|----------------|----------------------|--------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| GPT-4o-mini     | Good hint            | Migration message + Spring Boot 2 code + example before/after                           | `UserDetailsService` and `PasswordEncoder` implemented. `SecurityFilterChain` added but used deprecated `authorizeRequests()` | Correct migration structure. However, it did not follow Spring Security 6 best practices. Used deprecated methods.                                         |
+| GPT-3.5-turbo   | No hint              | Migration message + Spring Boot 2 code                                                                         | Only `PasswordEncoder` bean returned. `WebSecurityConfigurerAdapter` not removed. No user defined                | Incomplete. Ignored the hint entirely. No actual migration applied. Missed `UserDetailsService`, did not remove deprecated code.                                                                           |
+| GPT-3.5-turbo   | Poor hint            | Migration message + Spring Boot 2 code + before/after example                                                  | Implemented `UserDetailsService` and `PasswordEncoder`, but retained `WebSecurityConfigurerAdapter`              | Partial migration. Implemented new beans but failed to remove the deprecated base class.                                       |
+| GPT-3.5-turbo   | Good hint            | Migration message + Spring Boot 2 code + before/after + GPT-4o-mini summary of chnages                                  | `UserDetailsService`, `PasswordEncoder` implemented. Added `SecurityFilterChain` functionality which was incorrect.  | Covered all migration elements for the code provided. But, added a functionality with  outdated methods. Output would not compile without cleanup. Demonstrates hint impact. |
+
+
+
 ### GPT-4o-mini
 
 #### Hint strategy
